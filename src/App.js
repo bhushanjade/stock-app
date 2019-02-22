@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import StockListing from './components/stock-listing/StockListing';
 import StockChart from './components/stock-chart/StockChart';
 
@@ -17,7 +17,7 @@ class App extends Component {
             'isLoading': true,
             'stocksData': {},
             isLive: false,
-            connectionError:false,
+            connectionError: false,
         };
         this.saveNewStockValues = this.saveNewStockValues.bind(this);
         this.toggleStockSelection = this.toggleStockSelection.bind(this);
@@ -93,15 +93,9 @@ class App extends Component {
     };
 
     getTrend(intialStockValue, currentStockValue) {
+        //mimic  Percentage Change. compare with current with intialValue.
         let diff = currentStockValue - intialStockValue;
-        // if(currentStockValue < intialStockValue){
         return parseFloat((diff / intialStockValue) * 100).toFixed(2);
-        // }
-        // if (intialStockValue > currentStockValue) {
-        //     return ((intialStockValue - currentStockValue) % intialStockValue) * 100
-        // } else {
-        //     return ((currentStockValue + intialStockValue) % intialStockValue) * 100
-        // }
         return diff;
     }
 
@@ -126,22 +120,22 @@ class App extends Component {
                                     {this.state.isLive ?
                                         <span className="status is-live">Live</span> :
                                         <span
-                                            className="status is-offline">Offline</span> }
+                                            className="status is-offline">Offline</span>}
                                 </div>
                             </div>
                         </div>
                         <div className='card-content'>
                             <StockListing stocks={this.state.stocksData}
-                                          toogleStockSelect={this.toggleStockSelection} />
+                                          toogleStockSelect={this.toggleStockSelection}/>
                         </div>
                     </div>
                     {/* Stock Graph */}
                     <div className="card-50 float-right">
                         <div className='card'>
-                            <StockChart stocks={this.state.stocksData} />
+                            <StockChart stocks={this.state.stocksData}/>
                         </div>
                     </div>
-                </div>: this.state.connectionError ? <div>Oops ! Something went Wrong</div> : <div> Loading... </div>}
+                </div> : this.state.connectionError ? <div>Oops ! Something went Wrong</div> : <div> Loading... </div>}
             </div>
         );
     }
