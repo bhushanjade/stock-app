@@ -1,0 +1,148 @@
+* {
+    box-sizing: border-box;
+}
+
+/* Style the body */
+body {
+    font-family: Arial;
+    margin: 0;
+}
+
+.container {
+    margin: 20px;
+    border: solid 2px #c1c1c1;
+    overflow: hidden;
+}
+
+/* Column container */
+.row {
+    /*display: flex;*/
+    /*flex-wrap: wrap;*/
+}
+
+.card-50 {
+    padding: 20px;
+    width: 50%;
+}
+
+.float-right {
+    float: right;
+}
+
+.float-left {
+    float: left;
+}
+
+.card-header-title {
+    /*color: white;*/
+    font-weight: 600;
+    font-size: 20px;
+    padding: 5px 0px;
+}
+
+.card-content {
+    padding-left: 0px;
+    padding-right: 0px;
+}
+
+#table-stock-listings {
+    border-collapse: collapse;
+    width: 100%;
+
+    table-layout: auto;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+    font-size: 14px;
+}
+
+.right-border {
+    border-right: solid 1px #f7f7f7;
+}
+
+.left-border {
+    border-left: solid 1px #f7f7f7;
+}
+
+tr:hover {
+    background-color: #f5f5f5;
+    cursor: pointer;
+}
+
+.active {
+    background-color: #f5f5f5;
+}
+
+.size-12 {
+    font-size: 12px;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.status {
+    color: #fff;
+    margin-left: 5px;
+    text-transform: uppercase;
+    font-size: 14px;
+    font-weight: 600;
+    /* text-shadow: 2px 2px #ABFF00; */
+    padding: 3px 10px;
+    border-radius: 5px;
+    float: right;
+}
+
+.is-live {
+    color: #fff;
+    background: #45b92e;
+}
+
+.is-offline {
+    color: #fff;
+    background: #ff0a29;
+}
+
+.trending {
+
+}
+.trend-up {
+    font-size:20px;
+    margin-left:5px;
+    transform: rotate(-270deg);
+    display: inline-block;
+    overflow: hidden;
+    color:green;
+}
+
+.trend-down {
+    font-size:20px;
+    margin-left:5px;
+    transform: rotate(270deg);
+    display: inline-block;
+    overflow: hidden;
+    color:red;
+}
+
+
+@media screen and (max-width: 768px) {
+    .container {
+        border: solid 0px #c1c1c1;
+    }
+
+    .right-border {
+        border-right: none;
+    }
+
+    .left-border {
+        border-right: none;
+    }
+
+    .card-50 {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+}
