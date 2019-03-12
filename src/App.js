@@ -6,7 +6,7 @@ import StockChart from './components/stock-chart/StockChart';
 import './App.css';
 
 //websocket url
-const stocksUrl = 'ws://stocks.mnet.website';
+const stocksUrl = 'wss://stocks.mnet.website';
 
 
 class App extends Component {
@@ -102,6 +102,7 @@ class App extends Component {
     toggleStockSelection(stockName) {
         let new_stocks = this.state.stocksData;
         new_stocks[stockName].isSelected = !new_stocks[stockName].isSelected;
+
         this.setState({stocksData: new_stocks});
     }
 
