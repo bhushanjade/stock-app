@@ -1,0 +1,65 @@
+#https://www.youtube.com/watch?v=2dGRIlvmvOE
+#https://besu.hyperledger.org/en/stable/private-networks/tutorials/clique/#prerequisites
+cd ../../bin
+sudo yum update
+sudo yum install java
+
+sudo wget https://hyperledger.jfrog.io/hyperledger/besu-binaries/besu/23.1.0-RC1/besu-23.1.0-RC1.tar.gz
+sudo tar -xf besu-23.1.0-RC1.tar.gz
+export PATH=$PATH:/home/ec2-user/besu-23.1.0-RC1/bin
+
+#besu --help
+
+cd /home/ec2-user
+mkdir TicketManagement
+cd TicketManagement/
+mkdir node1
+mkdir node2
+mkdir node3
+mkdir node1/data
+mkdir node2/data
+mkdir node3/data
+cd node1
+besu --data-path=data public-key export-address --to=data/node1Address
+cd ../node2
+besu --data-path=data public-key export-address --to=data/node2Address
+cd ../node3
+besu --data-path=data public-key export-address --to=data/node3Address
+
+cd ..
+
+#make sure the "extraData" is field is updated with node1 address in cliqueGenesis.json file. use following command to get address
+#cat node1/data/node1Address
+#make sure the cliqueGenesis.json file there, if not create it on current  location 
+#make sure the config.toml file is there , if not create it on current  location 
+
+
+cd node1
+besu --config-file=../config.toml --rpc-http-port=8545 --p2p-port=30303
+
+#Open new terminal
+export PATH=$PATH:/home/ec2-user/besu-23.1.0-RC1/bin
+cd TicketManagement/node2
+besu --config-file=../config.toml --rpc-http-port=8546 --p2p-port=30304 --bootnodes=enode://fd88ed298ec4abc41592ed6236861fe18e33af1793839addca26e7353090cb7bedbc9352ce2eb96f56201fe85431f68d790fbbb206de23c30c65538c2b0fd5ee@127.0.0.1:30303
+
+#Open new terminal
+export PATH=$PATH:/home/ec2-user/besu-23.1.0-RC1/bin
+cd TicketManagement/node3
+besu --config-file=../config.toml --rpc-http-port=8547 --p2p-port=30305 --bootnodes=enode://fd88ed298ec4abc41592ed6236861fe18e33af1793839addca26e7353090cb7bedbc9352ce2eb96f56201fe85431f68d790fbbb206de23c30c65538c2b0fd5ee@127.0.0.1:30303
+
+
+
+
+#test the network
+
+
+#Open in different terminal, to confirm node is in network , verify the count by pointing rpc port of any of the netwrok node
+curl -X POST --data '{"jsonrpc":"2.0","method":"net_peerCount","params":[],"id":1}' localhost:8545
+curl -X POST --data '{"jsonrpc":"2.0","method":"net_peerCount","params":[],"id":1}' localhost:8546
+curl -X POST --data '{"jsonrpc":"2.0","method":"net_peerCount","params":[],"id":1}' localhost:8547
+
+
+curl -X POST --data '{"jsonrpc":"2.0","method":"net_peerCount","params":[],"id":1}' 35.153.16.192:8545
+
+#from windows command
+curl -X POST --data "{\"jsonrpc\":\"2.0\",\"method\":\"net_peerCount\",\"params\":[],\"id\":1}" 35.153.16.192:8545

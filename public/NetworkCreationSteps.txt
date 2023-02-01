@@ -1,0 +1,87 @@
+#https://besu.hyperledger.org/en/stable/private-networks/tutorials/clique/#prerequisites
+
+
+cd downloads
+ssh -i "TicketBookingKeyPair.pem" ec2-user@ec2-35-153-16-192.compute-1.amazonaws.com
+
+export PATH=$PATH:/home/ec2-user/besu-23.1.0-RC1/bin
+cd TicketManagement/node3
+
+
+
+cd ../../bin
+sudo yum update
+sudo yum install java
+
+sudo wget https://hyperledger.jfrog.io/hyperledger/besu-binaries/besu/23.1.0-RC1/besu-23.1.0-RC1.tar.gz
+sudo tar -xf besu-23.1.0-RC1.tar.gz
+export PATH=$PATH:/home/ec2-user/besu-23.1.0-RC1/bin
+#besu --help
+
+cd /home/ec2-user
+mkdir TicketManagement
+cd TicketManagement/
+	mkdir node1
+	mkdir node2
+	mkdir node3
+	mkdir node1/data
+	mkdir node2/data
+	mkdir node3/data
+	cd node1
+	besu --data-path=data public-key export-address --to=data/node1Address
+	cd ../node2
+	besu --data-path=data public-key export-address --to=data/node2Address
+	cd ../node3
+	besu --data-path=data public-key export-address --to=data/node3Address
+
+	cd ..
+	
+cat node1/data/node1Address  #update the address in cliqueGenesis.json
+cat node1/data/key			#update the private key in cliqueGenesis.json
+vi cliqueGenesis.json   #https://besu.hyperledger.org/en/stable/private-networks/how-to/configure/consensus/clique/#genesis-file
+
+
+cd node1
+besu --data-path=data --genesis-file=../cliqueGenesis.json --network-id 14333 --rpc-http-enabled --rpc-http-api=ETH,NET,CLIQUE --host-allowlist="*" --rpc-http-cors-origins="all" --rpc-http-host=0.0.0.0
+	
+
+#Copy Enode URL like belo from the log
+#enode://77a32fae53d71532bb324348f73899d1a80ce2c1246ed26456d6f41493233e1c1509ae87b93ddec7a50f8bda867816403d3b2d8d2031223356884303c073e80a@127.0.0.1:30303
+#enode://ff844df1ba21839fd772754bb407344f71ba0ecc204181682319a8b806b45039137e4d5b06e2260184197845173e62a9b5d0636bbd8e6e1da00172a9fda27dbd@127.0.0.1:30303
+
+
+#Open in different terminal
+#Node 2
+export PATH=$PATH:/home/ec2-user/besu-23.1.0-RC1/bin
+cd node2
+besu --data-path=data --genesis-file=../cliqueGenesis.json --bootnodes=enode://ff844df1ba21839fd772754bb407344f71ba0ecc204181682319a8b806b45039137e4d5b06e2260184197845173e62a9b5d0636bbd8e6e1da00172a9fda27dbd@127.0.0.1:30303 --network-id 14333 --p2p-port=30304 --rpc-http-enabled --rpc-http-api=ETH,NET,CLIQUE --host-allowlist="*" --rpc-http-cors-origins="all" --rpc-http-port=8546 --rpc-http-host=0.0.0.0
+
+
+
+#Open in different terminal
+#Node 3
+export PATH=$PATH:/home/ec2-user/besu-23.1.0-RC1/bin
+cd node3
+besu --data-path=data --genesis-file=../cliqueGenesis.json --bootnodes=enode://ff844df1ba21839fd772754bb407344f71ba0ecc204181682319a8b806b45039137e4d5b06e2260184197845173e62a9b5d0636bbd8e6e1da00172a9fda27dbd@127.0.0.1:30303 --network-id 14333 --p2p-port=30305 --rpc-http-enabled --rpc-http-api=ETH,NET,CLIQUE --host-allowlist="*" --rpc-http-cors-origins="all" --rpc-http-host=0.0.0.0
+
+
+
+
+#help to connect with besu
+https://github.com/hyperledger/besu/issues/2187
+
+
+
+
+
+
+#Open in different terminal, to confirm node is in network , verify the count by pointing rpc port of any of the netwrok node
+curl -X POST --data '{"jsonrpc":"2.0","method":"net_peerCount","params":[],"id":1}' localhost:8545
+curl -X POST --data '{"jsonrpc":"2.0","method":"net_peerCount","params":[],"id":1}' localhost:8546
+curl -X POST --data '{"jsonrpc":"2.0","method":"net_peerCount","params":[],"id":1}' localhost:8547
+
+
+curl -X POST --data '{"jsonrpc":"2.0","method":"net_peerCount","params":[],"id":1}' 35.153.16.192:8545
+
+#from windows command
+curl -X POST --data "{\"jsonrpc\":\"2.0\",\"method\":\"net_peerCount\",\"params\":[],\"id\":1}" 35.153.16.192:8545

@@ -1,0 +1,8 @@
+data-path="data"
+genesis-file="../cliqueGenesis.json"
+network-id=14333
+rpc-http-enabled=true
+rpc-http-api=["ETH","NET","CLIQUE"]
+host-allowlist=["*"]
+rpc-http-cors-origins=["all"]
+rpc-http-host="0.0.0.0"
